@@ -1,0 +1,24 @@
+{
+  "name": "cadence-by-c0d3ai",
+  "version": "0.1.0",
+  "description": "AI-powered client communication system for proactive project update emails.",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "googleapis": "^144.0.0",
+    "mammoth": "^1.8.0",
+    "node-cron": "^3.0.3",
+    "openai": "^4.80.1",
+    "pdf-parse": "^1.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}

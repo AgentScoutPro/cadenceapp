@@ -1,0 +1,52 @@
+[
+  {
+    "id": "website-refresh",
+    "client_name": "Jordan Lee",
+    "client_email": "jordan@example.com",
+    "project_name": "Website Refresh",
+    "scope_of_work": "Refresh the company website with updated messaging, a clearer services structure, improved homepage flow, and launch-ready QA.",
+    "deliverables": [
+      "Homepage refresh",
+      "Services page copy and layout",
+      "Launch QA checklist",
+      "Final handoff notes"
+    ],
+    "milestones": [
+      "Homepage direction approved",
+      "Services copy finalized",
+      "QA pass completed",
+      "Launch handoff"
+    ],
+    "deadlines": [
+      "Services copy approval by Friday",
+      "QA pass next Wednesday",
+      "Target launch next Friday"
+    ],
+    "last_updates": [
+      {
+        "sent_at": "2026-05-01T16:00:00.000Z",
+        "subject": "[Cadence Update] Website Refresh - Status + Next Steps",
+        "body": "Hi Jordan,\n\nQuick update on the Website Refresh project. We made progress on the homepage structure and confirmed the revised services outline. The next focus is tightening final copy and preparing the launch checklist.\n\nBest,\nC0D3AI"
+      }
+    ],
+    "open_loops": [
+      "Final approval on services copy",
+      "Confirmation of launch-day contact"
+    ],
+    "risks": [
+      "QA timing may compress if services copy approval moves later"
+    ],
+    "wins": [
+      "Homepage section order is approved",
+      "Launch checklist is drafted"
+    ],
+    "recent_activity_summary": "Homepage direction is approved, services copy is the main open item, and QA preparation can continue in parallel.",
+    "gmail_thread_query": "from:jordan@example.com OR to:jordan@example.com newer_than:30d",
+    "local_document_paths": [
+      "data/sample-docs/scope-of-work.txt",
+      "data/sample-docs/project-plan.txt"
+    ],
+    "last_email_sent_at": null,
+    "active": true
+  }
+]

@@ -1,0 +1,9 @@
+Scope of Work - Website Refresh
+
+The project includes a homepage refresh, services page content structure, launch QA checklist, and final handoff notes. The main client goal is to make the site easier for prospects to understand and simpler for the internal team to maintain.
+
+Current deliverables:
+- Homepage refresh
+- Services page copy and layout
+- Launch QA checklist
+- Final handoff notes

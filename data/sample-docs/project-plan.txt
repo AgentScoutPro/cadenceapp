@@ -1,0 +1,18 @@
+Project Plan - Website Refresh
+
+Recent progress:
+- Homepage section order is approved.
+- Launch checklist has been drafted.
+- Services page copy is still awaiting final approval.
+
+Open loops:
+- Jordan needs to approve the revised services copy.
+- Client team needs to confirm the launch-day contact.
+
+Risks:
+- QA timing may compress if copy approval moves later.
+
+Next steps:
+- Continue layout refinement.
+- Prepare remaining QA items.
+- Move services page into final build once copy is approved.
