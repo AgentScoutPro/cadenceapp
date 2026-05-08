@@ -13,7 +13,11 @@ const state = {
   modalProject: null,
   modalEmail: null,
   editMode: false,
-  sending: false
+  sending: false,
+  config: null,
+  password: window.localStorage.getItem("cadencePassword") || "",
+  sendDryRun: true,
+  sendTestRecipient: ""
 };
 
 const navItems = [
@@ -68,7 +72,17 @@ function showToast(message) {
 }
 
 async function requestJson(url, options = {}) {
-  const response = await fetch(url, options);
+  const headers = {
+    ...(options.headers || {})
+  };
+  if (state.password) {
+    headers["x-cadence-demo-password"] = state.password;
+  }
+  if (options.body && !headers["Content-Type"]) {
+    headers["Content-Type"] = "application/json";
+  }
+
+  const response = await fetch(url, { ...options, headers });
   const data = await response.json();
   if (!response.ok) throw new Error(data.error || "Request failed");
   return data;
@@ -85,10 +99,29 @@ function allEmails() {
       ...email,
       id: `${project.id}-${index}`,
       project: project.project_name,
-      recipient: project.client_email,
+      recipient: email.recipient_email || project.client_email,
       status: index === 0 ? "Sent" : "Failed"
     }));
   });
+}
+
+function renderAuth() {
+  app.innerHTML = `
+    <main class="auth-screen">
+      <form class="auth-card card" data-auth-form>
+        <div class="brand auth-brand">
+          <div class="brand-mark">C</div>
+          <div><strong>Cadence</strong><span>by C0D3AI</span></div>
+        </div>
+        <div>
+          <h1>Protected Demo</h1>
+          <p>Enter the dashboard password to view project memory, generated updates, and send controls.</p>
+        </div>
+        <label class="field">Password<input class="input" type="password" name="password" autocomplete="current-password" autofocus /></label>
+        <button class="button primary" type="submit">Unlock Demo</button>
+      </form>
+    </main>
+  `;
 }
 
 function renderShell(content, title, subtitle) {
@@ -128,6 +161,7 @@ function renderShell(content, title, subtitle) {
 }
 
 function render() {
+  if (state.config?.authEnabled && !state.password) return renderAuth();
   if (state.loading) return renderShell(`<div class="loading card">Loading Cadence workspace...</div>`, "Dashboard", "Preparing active project cadences and email history.");
   if (state.error) return renderShell(`<div class="error card">${escapeHtml(state.error)}</div>`, "Dashboard", "Cadence could not load this workspace.");
   if (state.view === "email-log") return renderShell(renderEmailLog(), "Email Log", "Every generated project update, delivery status, and preview link.");
@@ -151,7 +185,7 @@ function renderDashboard() {
       <div class="metric card"><span>Projects</span><strong>${state.projects.length}</strong></div>
       <div class="metric card"><span>Emails sent</span><strong>${sentCount}</strong></div>
       <div class="metric card"><span>Next send</span><strong>${nextSendLabel().replace(" at ", " ")}</strong></div>
-      <div class="metric card"><span>Gmail</span><strong>Connected</strong></div>
+      <div class="metric card"><span>Gmail</span><strong>${state.config?.gmailConfigured ? "Connected" : "Dry Run"}</strong></div>
     </div>
     <div class="project-grid">
       ${state.projects.map(renderProjectCard).join("")}
@@ -263,7 +297,7 @@ function renderProjectForm() {
 function renderSettings() {
   return `
     <div class="settings-grid">
-      <div class="settings-card card"><div><h2>Gmail API</h2><p class="subtle">Connected as updates@c0d3ai.com</p></div><span class="badge connected">Connected</span><button class="button secondary">Reconnect Gmail</button></div>
+      <div class="settings-card card"><div><h2>Gmail API</h2><p class="subtle">${state.config?.gmailConfigured ? "Connected for live sends" : "Missing credentials; sends are dry-run only"}</p></div><span class="badge ${state.config?.gmailConfigured ? "connected" : "pending"}">${state.config?.gmailConfigured ? "Connected" : "Dry Run"}</span><button class="button secondary">Reconnect Gmail</button></div>
       <div class="settings-card card"><h2>Send Schedule</h2><label class="field">Mon morning time<input class="input" type="time" value="09:00" /></label><label class="field">Thu afternoon time<input class="input" type="time" value="14:00" /></label></div>
       <div class="settings-card card"><h2>Default Signature</h2><textarea class="textarea">Best,\nC0D3AI</textarea></div>
       <div class="settings-card card"><h2>OpenAI Model</h2><select class="select"><option>gpt-4.1</option><option>gpt-4.1-mini</option><option>gpt-4o</option></select></div>
@@ -285,6 +319,10 @@ function renderModal() {
         <div class="email-preview">
           <label class="field">Subject line<input class="input" value="${escapeHtml(generated.subject)}" ${state.editMode ? "" : "readonly"} /></label>
           <div class="field"><label>Email body</label><div class="email-body" ${state.editMode ? "contenteditable=true" : ""}>${escapeHtml(generated.body)}</div></div>
+          <div class="send-safety">
+            <label class="check-row"><input type="checkbox" data-dry-run ${state.sendDryRun ? "checked" : ""} /> Dry run only</label>
+            <label class="field">Test recipient override<input class="input" data-test-recipient value="${escapeHtml(state.sendTestRecipient)}" placeholder="you@example.com" /></label>
+          </div>
           <div class="subtle">${words} words · Tone: Clear, proactive, client-ready</div>
         </div>
         <div class="modal-foot">
@@ -302,6 +340,8 @@ async function openSendModal(projectId, generateOnly = true) {
   state.modalProject = project;
   state.modalEmail = null;
   state.editMode = false;
+  state.sendDryRun = !state.config?.gmailConfigured;
+  state.sendTestRecipient = "";
   render();
   if (!generateOnly) return;
   try {
@@ -326,6 +366,10 @@ async function loadProjects() {
     state.loading = false;
     render();
   }
+}
+
+async function loadConfig() {
+  state.config = await requestJson("/api/config");
 }
 
 app.addEventListener("click", async (event) => {
@@ -371,9 +415,18 @@ app.addEventListener("click", async (event) => {
     showToast("Email scheduled for the next cadence window.");
   } else if (confirmSend?.dataset.confirmSend) {
     state.sending = true;
+    state.sendDryRun = Boolean(document.querySelector("[data-dry-run]")?.checked);
+    state.sendTestRecipient = document.querySelector("[data-test-recipient]")?.value.trim() || "";
     render();
     try {
-      const data = await requestJson(`/api/email/${confirmSend.dataset.confirmSend}/send-now`, { method: "POST" });
+      const data = await requestJson(`/api/email/${confirmSend.dataset.confirmSend}/send-now`, {
+        method: "POST",
+        body: JSON.stringify({
+          confirm: true,
+          dryRun: state.sendDryRun,
+          testRecipient: state.sendTestRecipient
+        })
+      });
       state.modalEmail = data.generated;
       state.modalOpen = false;
       await loadProjects();
@@ -388,6 +441,15 @@ app.addEventListener("click", async (event) => {
 });
 
 app.addEventListener("submit", (event) => {
+  if (event.target.matches("[data-auth-form]")) {
+    event.preventDefault();
+    state.password = new FormData(event.target).get("password")?.toString() || "";
+    window.localStorage.setItem("cadencePassword", state.password);
+    state.loading = true;
+    loadProjects();
+    return;
+  }
+
   if (event.target.matches("[data-project-form]")) {
     event.preventDefault();
     showToast("Project saved.");
@@ -396,4 +458,10 @@ app.addEventListener("submit", (event) => {
   }
 });
 
-loadProjects();
+loadConfig()
+  .then(loadProjects)
+  .catch((error) => {
+    state.error = error.message;
+    state.loading = false;
+    render();
+  });

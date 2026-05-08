@@ -24,9 +24,9 @@
     ],
     "last_updates": [
       {
-        "sent_at": "2026-05-01T16:00:00.000Z",
+        "sent_at": "2026-05-05T16:00:00.000Z",
         "subject": "[Cadence Update] Website Refresh - Status + Next Steps",
-        "body": "Hi Jordan,\n\nQuick update on the Website Refresh project. We made progress on the homepage structure and confirmed the revised services outline. The next focus is tightening final copy and preparing the launch checklist.\n\nBest,\nC0D3AI"
+        "body": "Hi Jordan,\n\nQuick update on the Website Refresh project. The homepage direction is approved, services copy is the main open item, and QA preparation can continue in parallel.\n\nBest,\nC0D3AI"
       }
     ],
     "open_loops": [
@@ -46,7 +46,99 @@
       "data/sample-docs/scope-of-work.txt",
       "data/sample-docs/project-plan.txt"
     ],
-    "last_email_sent_at": null,
+    "last_email_sent_at": "2026-05-05T16:00:00.000Z",
     "active": true
+  },
+  {
+    "id": "crm-automation",
+    "client_name": "Maya Patel",
+    "client_email": "maya@example.com",
+    "project_name": "CRM Automation Rollout",
+    "scope_of_work": "Implement lead intake automation, client follow-up sequences, and reporting views for a service business operations team.",
+    "deliverables": [
+      "Lead routing workflow",
+      "Two follow-up email sequences",
+      "Pipeline dashboard",
+      "Admin training notes"
+    ],
+    "milestones": [
+      "Workflow map approved",
+      "Automation QA",
+      "Training walkthrough",
+      "Go-live"
+    ],
+    "deadlines": [
+      "QA review Monday",
+      "Training walkthrough Thursday",
+      "Go-live next week"
+    ],
+    "last_updates": [
+      {
+        "sent_at": "2026-05-04T16:30:00.000Z",
+        "subject": "[Cadence Update] CRM Automation Rollout - QA Plan",
+        "body": "Hi Maya,\n\nThe lead routing workflow is now mapped and ready for QA. This week is focused on confirming field mapping and checking the follow-up timing before the training walkthrough.\n\nBest,\nC0D3AI"
+      }
+    ],
+    "open_loops": [
+      "Confirm final pipeline stage names",
+      "Approve test lead import file"
+    ],
+    "risks": [
+      "Reporting accuracy depends on field mapping approval"
+    ],
+    "wins": [
+      "Lead routing logic is approved",
+      "Training outline is drafted"
+    ],
+    "recent_activity_summary": "Workflow mapping is complete and the team is moving into QA, with field mapping as the main dependency.",
+    "gmail_thread_query": "from:maya@example.com OR to:maya@example.com newer_than:30d",
+    "local_document_paths": [],
+    "last_email_sent_at": "2026-05-04T16:30:00.000Z",
+    "active": true
+  },
+  {
+    "id": "brand-launch",
+    "client_name": "Elliot Ramos",
+    "client_email": "elliot@example.com",
+    "project_name": "Brand Launch Kit",
+    "scope_of_work": "Prepare launch messaging, homepage copy, outreach snippets, and a lightweight launch checklist for a new consulting offer.",
+    "deliverables": [
+      "Homepage messaging",
+      "Launch email copy",
+      "Social announcement snippets",
+      "Launch checklist"
+    ],
+    "milestones": [
+      "Positioning approved",
+      "Copy review",
+      "Asset handoff"
+    ],
+    "deadlines": [
+      "Copy review paused pending offer notes",
+      "Asset handoff reschedules after approval"
+    ],
+    "last_updates": [
+      {
+        "sent_at": "2026-05-01T19:00:00.000Z",
+        "subject": "[Cadence Update] Brand Launch Kit - Paused Pending Notes",
+        "body": "Hi Elliot,\n\nThe launch kit is paused while we wait on the final offer notes. Once those arrive, the next step is to tighten homepage messaging and prepare the announcement copy.\n\nBest,\nC0D3AI"
+      }
+    ],
+    "open_loops": [
+      "Final offer notes",
+      "Approval on announcement channels"
+    ],
+    "risks": [
+      "Launch date may move if offer notes arrive after Friday"
+    ],
+    "wins": [
+      "Positioning direction is approved",
+      "Launch checklist shell is ready"
+    ],
+    "recent_activity_summary": "Positioning is approved, but copy work is paused until final offer notes are available.",
+    "gmail_thread_query": "from:elliot@example.com OR to:elliot@example.com newer_than:30d",
+    "local_document_paths": [],
+    "last_email_sent_at": "2026-05-01T19:00:00.000Z",
+    "active": false
   }
 ]

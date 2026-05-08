@@ -11,5 +11,15 @@
       "src": "/(.*)",
       "dest": "server.js"
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/send-updates",
+      "schedule": "0 16 * * 1"
+    },
+    {
+      "path": "/api/cron/send-updates",
+      "schedule": "0 21 * * 4"
+    }
   ]
 }

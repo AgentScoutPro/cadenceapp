@@ -722,6 +722,66 @@ tr:last-child td {
   transform: translateY(0);
 }
 
+.auth-screen {
+  align-items: center;
+  background: linear-gradient(135deg, #0b1220 0%, #111827 45%, #f6f8fb 45%);
+  display: grid;
+  min-height: 100vh;
+  padding: 22px;
+  place-items: center;
+}
+
+.auth-card {
+  display: grid;
+  gap: 18px;
+  max-width: 420px;
+  padding: 24px;
+  width: 100%;
+}
+
+.auth-brand {
+  color: var(--ink);
+  padding: 0;
+}
+
+.auth-card h1 {
+  font-size: 1.5rem;
+  margin: 0 0 6px;
+}
+
+.auth-card p {
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.send-safety {
+  align-items: end;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 170px minmax(0, 1fr);
+}
+
+.check-row {
+  align-items: center;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  color: #344054;
+  display: flex;
+  font-size: 0.9rem;
+  font-weight: 700;
+  gap: 9px;
+  min-height: 38px;
+  padding: 8px 10px;
+}
+
+.check-row input {
+  accent-color: var(--blue);
+  height: 16px;
+  width: 16px;
+}
+
 @media (max-width: 980px) {
   .layout {
     grid-template-columns: 1fr;
@@ -787,8 +847,10 @@ tr:last-child td {
   }
 
   .form-actions,
-  .modal-foot {
+  .modal-foot,
+  .send-safety {
     align-items: stretch;
     flex-direction: column;
+    grid-template-columns: 1fr;
   }
 }

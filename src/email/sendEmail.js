@@ -9,7 +9,15 @@ function encodeMessage(message) {
     .replace(/=+$/, "");
 }
 
-export async function sendEmail({ to, subject, body }) {
+export async function sendEmail({ to, subject, body, dryRun = false }) {
+  if (dryRun) {
+    return {
+      dryRun: true,
+      id: `dry-run-${Date.now()}`,
+      message: "Dry run requested. Email was generated but not sent."
+    };
+  }
+
   const gmail = getGmailClient();
   if (!gmail) {
     return {

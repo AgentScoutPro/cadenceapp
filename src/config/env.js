@@ -7,6 +7,11 @@ const optional = (key, fallback = "") => process.env[key] || fallback;
 export const env = {
   port: Number(optional("PORT", "3000")),
   cronEnabled: optional("CRON_ENABLED", "false") === "true",
+  demoMode: optional("DEMO_MODE", "true") === "true",
+  dashboardPassword: optional("DASHBOARD_PASSWORD"),
+  cronSecret: optional("CRON_SECRET"),
+  testRecipientEmail: optional("TEST_RECIPIENT_EMAIL"),
+  requireSendConfirmation: optional("REQUIRE_SEND_CONFIRMATION", "true") === "true",
   openaiApiKey: optional("OPENAI_API_KEY"),
   openaiModel: optional("OPENAI_MODEL", "gpt-4o-mini"),
   gmailClientId: optional("GMAIL_CLIENT_ID"),

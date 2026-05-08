@@ -10,7 +10,9 @@ Cadence is an MVP client communication system that builds project memory from Gm
 - OpenAI-powered update email generation
 - Gmail API sending
 - Monday morning and Thursday afternoon cron schedule
-- Minimal dashboard with project list, next scheduled send, preview, and Send Now
+- Protected demo dashboard with project list, detail tabs, email log, settings, preview, and Send Now
+- Safe-send controls: confirmation, dry-run mode, and test-recipient override
+- Vercel Cron endpoint for hosted twice-weekly sends
 
 ## Run Locally
 
@@ -29,6 +31,11 @@ Without API keys, the app still runs. OpenAI falls back to a deterministic sampl
 ```bash
 PORT=3000
 CRON_ENABLED=false
+DEMO_MODE=true
+DASHBOARD_PASSWORD=change-this-before-sharing
+CRON_SECRET=change-this-cron-secret
+REQUIRE_SEND_CONFIRMATION=true
+TEST_RECIPIENT_EMAIL=you@example.com
 OPENAI_API_KEY=sk-your-openai-key
 OPENAI_MODEL=gpt-4o-mini
 GMAIL_CLIENT_ID=your-google-oauth-client-id
@@ -39,6 +46,10 @@ GMAIL_SENDER_EMAIL=you@example.com
 ```
 
 Set `CRON_ENABLED=true` to enable scheduled sends.
+
+For a shared demo, set `DASHBOARD_PASSWORD` in Vercel. The browser sends this value as `x-cadence-demo-password` for protected API requests after the user unlocks the dashboard.
+
+`REQUIRE_SEND_CONFIRMATION=true` prevents accidental sends from raw API calls. The dashboard always sends `{ "confirm": true }` after the user presses Send Now. Keep `TEST_RECIPIENT_EMAIL` set while testing so live sends route to your own inbox instead of a client.
 
 ## Gmail API Setup
 
@@ -66,6 +77,17 @@ For production, use your own callback route instead of OAuth Playground and stor
 - `POST /api/projects/:id/memory`
 - `POST /api/email/:projectId/generate-preview`
 - `POST /api/email/:projectId/send-now`
+- `GET /api/cron/send-updates`
+
+`POST /api/email/:projectId/send-now` accepts:
+
+```json
+{
+  "confirm": true,
+  "dryRun": true,
+  "testRecipient": "you@example.com"
+}
+```
 
 ## Scheduler
 
@@ -75,6 +97,34 @@ The cron job runs:
 - Thursday at 2:00 PM
 
 It loops through active projects, ingests current project data, generates an update, sends it through Gmail, and records the update in project memory.
+
+On Vercel, cron is configured in `vercel.json`:
+
+- Monday 16:00 UTC, equivalent to Monday 9:00 AM America/Phoenix outside daylight saving shifts
+- Thursday 21:00 UTC, equivalent to Thursday 2:00 PM America/Phoenix outside daylight saving shifts
+
+Set `CRON_SECRET` in Vercel. Vercel Cron includes it as a bearer token when calling `/api/cron/send-updates`.
+
+## Production Notes
+
+For a serious production version, move the JSON stores in `data/` to Postgres, Supabase, Neon, or another persistent database. Serverless file writes are not durable on Vercel, so the current JSON store is suitable for a demo seed workspace and local development only.
+
+Recommended Vercel environment variables:
+
+```bash
+DASHBOARD_PASSWORD=your-demo-password
+CRON_SECRET=long-random-secret
+OPENAI_API_KEY=sk-...
+OPENAI_MODEL=gpt-4o-mini
+GMAIL_CLIENT_ID=...
+GMAIL_CLIENT_SECRET=...
+GMAIL_REFRESH_TOKEN=...
+GMAIL_SENDER_EMAIL=updates@yourdomain.com
+TEST_RECIPIENT_EMAIL=you@yourdomain.com
+REQUIRE_SEND_CONFIRMATION=true
+```
+
+To use a custom domain, add it in the Vercel project settings, then create the DNS record Vercel provides. A domain like `cadence.c0d3ai.com` will make the demo feel more credible than the generated Vercel URL.
 
 ## Sample Project
 
